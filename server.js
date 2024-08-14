@@ -1,10 +1,16 @@
 const express = require('express');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const bodyParser = require('body-parser');
-//const bcrypt=require('bcrypt');
+const bcrypt=require('bcrypt');
+const path = require("path");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
+// Middleware to parse URL-encoded bodies
+app.use(express.urlencoded({ extended: true }));
+
+// Serve static files
+app.use(express.static(path.join(__dirname, "public")));
 
 // MySQL connection
 const db = mysql.createConnection({
@@ -21,7 +27,7 @@ db.connect((err) => {
 
 // Serve the login page
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(path.join(__dirname,'/index.html'));
 });
 
 // Handle login
