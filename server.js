@@ -5,7 +5,6 @@ const bcrypt=require('bcrypt');
 const path = require("path");
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
 // Middleware to parse URL-encoded bodies
 app.use(express.urlencoded({ extended: true }));
 
@@ -41,20 +40,18 @@ app.post('/login', (req, res) => {
         if (results.length > 0) {
             const user = results[0];
 
-            bcrypt.compare(password, user.password, (err, isMatch) => {
-                if (err) throw err;
-
-                if (isMatch) {
-                    res.send('Login successful!');
-                } else {
-                    res.send('Invalid username or password');
-                }
-            });
+            // Simple comparison of plain text passwords
+            if (password === user.pass) {
+                res.send('Login successful!');
+            } else {
+                res.send('Invalid username or password');
+            }
         } else {
             res.send('Invalid username or password');
         }
     });
 });
+
 
 const port = 8080;
 app.listen(port, () => {
